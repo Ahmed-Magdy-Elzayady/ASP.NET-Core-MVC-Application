@@ -7,7 +7,7 @@ namespace Day04Lab.Validations
     {
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
-            DateOnly date = (DateOnly)value;
+            DateOnly date = (DateOnly)value!;
 
             var model = (ProductsCreateVM)validationContext.ObjectInstance;
 

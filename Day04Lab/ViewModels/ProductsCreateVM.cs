@@ -8,7 +8,7 @@ namespace Day04Lab.ViewModels
     {
         public int Id { get; set; }
         [Required]
-        [Remote("IsTitleAvailable","Product")]
+        [Remote("IsTitleAvailable","Product", AdditionalFields = "Id")]
         [MinLength(10,ErrorMessage ="Min Length Must be More Than 10 characters")]
         public string Title { get; set; }
         [Required]

@@ -7,7 +7,7 @@ namespace Day04Lab.Validations
 
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
-            DateOnly date = (DateOnly)value;
+            DateOnly date = (DateOnly)value!;
 
             if (date > DateOnly.FromDateTime(DateTime.Today))
             {

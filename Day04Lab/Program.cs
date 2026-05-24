@@ -1,4 +1,4 @@
-namespace Day04Lab
+﻿namespace Day04Lab
 {
     public class Program
     {

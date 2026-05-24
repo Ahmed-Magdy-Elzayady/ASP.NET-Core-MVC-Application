@@ -28,8 +28,17 @@
                     <td>@item.Category</td>
                 <td>
                 <a asp-action="MoreDetails" asp-controller="Product" asp-route-id="@item.Id"><button class="btn btn-info">More Details</button></a>
-                <a asp-action="DeleteProduct" asp-controller="Product" asp-route-id="@item.Id"><button class="btn btn-danger">Delete</button></a>
-                <a asp-action="UpdateProduct" asp-controller="Product" asp-route-id="@item.Id"><button class="btn btn-success">Update</button></a>
+                    <button type="button"
+                        class="btn btn-danger" 
+                        data-bs-toggle="modal" 
+                        @* data-bs-target="#exampleModal" *@
+                            data-bs-target="#deleteModal"
+                        data-product-id="@item.Id"
+                        data-product-Title="@item.Title"
+                    >
+                        Delete
+                    </button>     
+                    <a asp-action="UpdateProduct" asp-controller="Product" asp-route-id="@item.Id"><button class="btn btn-success">Update</button></a>
                 </td>
                 </tr>
             }
@@ -38,3 +47,44 @@
     </tbody>
 </table>
 
+
+
+
+
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Warning...⚠️</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are You Sure You Want to Delete 
+                and product Title 
+                <strong id="product_name"></strong>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" id="deletebtn">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        const deletemodal=document.getElementById('deleteModal');
+        deletemodal.addEventListener('show.bs.modal',event=>{
+            const button=event.relatedTarget;;
+            const Product_title=button.getAttribute('data-product-title');
+              const Product_id=button.getAttribute('data-product-id');
+            deletemodal.querySelector('#product_name').textContent= Product_title;
+          
+        const deletebtn=deletemodal.querySelector('#deletebtn');
+        deletebtn.onclick=()=>{
+            window.location.href=`Product/DeleteProduct/${Product_id}`;
+        }
+        });
+       
+    </script>
+}

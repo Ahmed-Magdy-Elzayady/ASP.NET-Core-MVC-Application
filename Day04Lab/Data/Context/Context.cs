@@ -8,7 +8,7 @@ namespace Day04Lab.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string ConnectionString =
-                "Data source=MR-BOMBASTIC\\SQLEXPRESS;Initial catalog=Day04MVcLab;Integrated security=true;TrustServerCertificate=True";
+                "Data source=MR-BOMBASTIC\\SQLEXPRESS;Initial catalog=Day04MVCLab;Integrated security=true;TrustServerCertificate=True";
             optionsBuilder.UseSqlServer(ConnectionString);
         }
 
