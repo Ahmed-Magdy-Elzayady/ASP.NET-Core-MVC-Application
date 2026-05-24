@@ -86,11 +86,11 @@ namespace Day04Lab.Controllers
             db.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
-        public IActionResult IsTitleAvailable(string _title)
+        public IActionResult IsTitleAvailable(string Title,int Id)
         {
-            var IsTitleFound = db.Products.Any(i => i.Title==_title);
+            var IsTitleFound = db.Products.Any(i => i.Title == Title && i.Id!=Id);
             if (IsTitleFound)
-                return Json($"Title {_title} is already exist");
+                return Json($"Title {Title} is already exist");
             return Json(true);
         }
 
@@ -108,7 +108,7 @@ namespace Day04Lab.Controllers
                 Count = DataToUpdate.Count,
                 Date_Of_Production = DataToUpdate.Date_Of_Production,
                 Date_Of_Expire = DataToUpdate.Date_Of_Expire,
-                CategoriesList=GetCategories()
+                CategoriesList = GetCategories()
             };
 
             return View(date);
@@ -141,6 +141,20 @@ namespace Day04Lab.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+
+        public IActionResult DeleteProduct(int id)
+        {
+            var UnwantedProduct = db.Products.FirstOrDefault(i => i.Id == id);
+            if (UnwantedProduct is null)
+            {
+                return NotFound();
+            }
+            db.Products.Remove(UnwantedProduct);
+            db.SaveChanges();
+            return RedirectToAction(nameof(Index));
+        }
+
 
         private List<SelectListItem> GetCategories()
         {
