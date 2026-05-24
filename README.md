@@ -1,220 +1,333 @@
-# ASP.NET Core MVC — Product Management Application
+<div align="center">
 
-A full-stack web application built with **ASP.NET Core 8 MVC** for managing a product inventory. The project demonstrates core MVC patterns, Entity Framework Core with SQL Server, data annotation validation (including custom attributes), and the CRUD operations pattern.
+# 🛒 Product Management System
 
----
+### A full-stack CRUD web application built with ASP.NET Core 8 MVC
 
-## Table of Contents
+[![.NET](https://img.shields.io/badge/.NET-8.0-512BD4?style=flat-square&logo=dotnet)](https://dotnet.microsoft.com/download/dotnet/8)
+[![ASP.NET Core MVC](https://img.shields.io/badge/ASP.NET_Core-MVC-512BD4?style=flat-square&logo=dotnet)](https://docs.microsoft.com/en-us/aspnet/core/mvc)
+[![Entity Framework Core](https://img.shields.io/badge/EF_Core-8.0-512BD4?style=flat-square&logo=nuget)](https://docs.microsoft.com/en-us/ef/core/)
+[![SQL Server](https://img.shields.io/badge/SQL_Server-LocalDB%2FExpress-CC2927?style=flat-square&logo=microsoftsqlserver)](https://www.microsoft.com/en-us/sql-server)
+[![Bootstrap](https://img.shields.io/badge/Bootstrap-5.1-7952B3?style=flat-square&logo=bootstrap)](https://getbootstrap.com)
 
-- [Overview](#overview)
-- [Tech Stack](#tech-stack)
-- [Project Structure](#project-structure)
-- [Features](#features)
-- [Data Models](#data-models)
-- [Validation](#validation)
-- [Getting Started](#getting-started)
-- [Database Setup](#database-setup)
-- [Seed Data](#seed-data)
-- [Author](#author)
+</div>
 
 ---
 
-## Overview
+## 📋 Table of Contents
 
-This application provides a product management interface where users can:
-
-- Browse a paginated list of all products with category labels
-- View detailed product information including pricing, stock count, and date metadata
-- Create new products with full server-side and client-side validation
-- Update existing product records
-- Navigate a clean Bootstrap 5 UI
-
-The project is structured around the MVC pattern with a clear separation between Models, Views, Controllers, ViewModels, and Data access logic.
+- [Overview](#-overview)
+- [Tech Stack](#-tech-stack)
+- [Architecture & Project Structure](#-architecture--project-structure)
+- [Features](#-features)
+- [Data Models](#-data-models)
+- [Validation System](#-validation-system)
+- [Getting Started](#-getting-started)
+- [Database Setup](#-database-setup)
+- [Seed Data](#-seed-data)
+- [API Endpoints](#-api-endpoints)
+- [Contributing](#-contributing)
+- [Author](#-author)
 
 ---
 
-## Tech Stack
+## 🔍 Overview
 
-| Layer | Technology |
+**Product Management System** is a full-stack web application that provides a complete inventory management interface. Built on the **ASP.NET Core 8 MVC** framework, it demonstrates enterprise-grade patterns including the Repository-ready MVC architecture, Entity Framework Core with Fluent API configuration, layered ViewModel projection, and a robust dual-layer validation system combining standard Data Annotations with custom-built validation attributes.
+
+The application is ideal as a reference implementation or learning project for developers working with the .NET ecosystem.
+
+### What you can do
+
+| Action | Description |
 |---|---|
-| Framework | ASP.NET Core 8 (MVC) |
-| Language | C# (.NET 8.0) |
-| ORM | Entity Framework Core 8 |
-| Database | Microsoft SQL Server (LocalDB / SQL Express) |
-| Frontend | Razor Views, Bootstrap 5.1, jQuery |
-| Validation | Data Annotations, Remote Validation, Custom Attributes |
+| 📦 **Browse Products** | Paginated product listing with category labels, pricing, and descriptions |
+| 🔎 **View Details** | Full product detail page including stock count and date metadata |
+| ➕ **Create Products** | Form-driven product creation with full server-side and AJAX remote validation |
+| ✏️ **Update Products** | Edit existing product records with pre-populated form fields |
+| 🗑️ **Delete Products** | Remove products from inventory with immediate redirect |
 
 ---
 
-## Project Structure
+## 🛠 Tech Stack
+
+| Layer | Technology | Version |
+|---|---|---|
+| **Framework** | ASP.NET Core MVC | 8.0 |
+| **Language** | C# | 12 / .NET 8.0 |
+| **ORM** | Entity Framework Core | 8.0.0 |
+| **Database** | Microsoft SQL Server (LocalDB / SQL Express) | — |
+| **Frontend** | Razor Views + Bootstrap | 5.1 |
+| **Interactivity** | jQuery (Unobtrusive Validation) | — |
+| **Validation** | Data Annotations, Remote Validation, Custom Attributes | — |
+
+---
+
+## 🏗 Architecture & Project Structure
+
+This project follows a clean **MVC + ViewModel** pattern. Business entities (Models) are never exposed directly to views; instead, purpose-built ViewModels carry only the data each view requires.
 
 ```
-Day04Lab/
-├── Controllers/
-│   ├── HomeController.cs          # Home and Privacy pages
-│   └── ProductController.cs       # Product CRUD + Remote validation
-│
-├── Models/
-│   ├── Products.cs                # Product entity
-│   ├── Categories.cs              # Category entity
-│   └── ErrorViewModel.cs
-│
-├── ViewModels/
-│   ├── ProductsIndexVM.cs         # List view projection
-│   ├── ProductsDetailsVM.cs       # Detail view projection
-│   └── ProductsCreateVM.cs        # Create/Edit form model
-│
-├── Data/
-│   ├── Context/
-│   │   └── Context.cs             # DbContext with seed data
-│   └── Configrations/
-│       └── ProductConfigration.cs # Fluent API configuration
-│
-├── Validations/
-│   ├── ExpireDateValidationAttribute.cs
-│   └── ProductionDateValidationAttribute.cs
-│
-├── Migrations/
-│   └── 20260524130701_Init.cs
-│
-└── Views/
-    ├── Home/
-    │   ├── Index.cshtml
-    │   └── Privacy.cshtml
-    ├── Product/
-    │   ├── Index.cshtml
-    │   ├── MoreDetails.cshtml
-    │   ├── CreateNewProduct.cshtml
-    │   └── UpdateProduct.cshtml
-    └── Shared/
-        └── _Layout.cshtml
+ASP.NET-Core-MVC-Application/
+├── Day04Lab.sln
+└── Day04Lab/
+    │
+    ├── Controllers/
+    │   ├── HomeController.cs              # Home & Privacy pages
+    │   └── ProductController.cs           # Full CRUD + Remote validation endpoint
+    │
+    ├── Models/                            # Domain entities (EF Core mapped)
+    │   ├── Products.cs                    # Product entity with navigation property
+    │   ├── Categories.cs                  # Category entity with collection navigation
+    │   └── ErrorViewModel.cs
+    │
+    ├── ViewModels/                        # View-specific projections (no over-fetching)
+    │   ├── ProductsIndexVM.cs             # Lightweight list projection
+    │   ├── ProductsDetailsVM.cs           # Full detail projection
+    │   └── ProductsCreateVM.cs            # Create/Edit form model with validation
+    │
+    ├── Data/
+    │   ├── Context/
+    │   │   └── Context.cs                 # DbContext — OnConfiguring + seed data
+    │   └── Configrations/
+    │       └── ProductConfigration.cs     # Fluent API entity configuration
+    │
+    ├── Validations/                       # Custom ValidationAttribute implementations
+    │   ├── ExpireDateValidationAttribute.cs
+    │   └── ProductionDateValidationAttribute.cs
+    │
+    ├── Migrations/
+    │   └── 20260524130701_Init.cs         # Initial schema migration
+    │
+    ├── Views/
+    │   ├── Home/
+    │   │   ├── Index.cshtml
+    │   │   └── Privacy.cshtml
+    │   ├── Product/
+    │   │   ├── Index.cshtml               # Product listing table
+    │   │   ├── MoreDetails.cshtml         # Product detail page
+    │   │   ├── CreateNewProduct.cshtml    # Create form
+    │   │   └── UpdateProduct.cshtml       # Edit form
+    │   └── Shared/
+    │       └── _Layout.cshtml             # Bootstrap 5 shell layout
+    │
+    ├── Program.cs                         # Application entry point & middleware pipeline
+    ├── appsettings.json
+    └── appsettings.Development.json
 ```
 
 ---
 
-## Features
+## ✨ Features
 
 ### Product Listing
-The `ProductController.Index()` action queries all products and projects them into `ProductsIndexVM`, displaying the title, description, price, and associated category name in a tabular view.
+`ProductController.Index()` queries all products and projects them into `ProductsIndexVM`, selecting only the fields required for the table view — title, description, price, and the related category name — avoiding over-fetching.
 
 ### Product Details
-`ProductController.MoreDetails(int id)` fetches a single product with its related category using `Include()`, mapping to `ProductsDetailsVM` which also exposes production and expiry dates and stock count.
+`ProductController.MoreDetails(int id)` performs an eager-loaded query using EF Core's `Include()` to fetch the related `Category` in a single round-trip, then maps the result to `ProductsDetailsVM`. Returns `404 Not Found` if the product does not exist.
 
 ### Create Product
-A two-action pattern (`[HttpGet]` / `[HttpPost]`) handles the create form. The GET action populates the `CategoriesList` dropdown via `SelectListItem`. The POST action validates the model — clearing `CategoriesList` from `ModelState` before checking `ModelState.IsValid` — then persists the entity.
+Implements the standard **GET/POST** action pair. The GET action populates a `SelectList` of categories for the dropdown. The POST action removes `CategoriesList` from `ModelState` before validation (since the list is not submitted by the form) and persists the entity on success, redirecting to the index.
 
-### Remote Validation
-The `Title` field uses `[Remote("IsTitleAvailable", "Product")]` to check for duplicate titles asynchronously via an AJAX call before form submission.
+### Update Product
+Mirrors the create pattern. The GET action fetches the existing record and pre-populates `ProductsCreateVM`. The POST action patches only the fields exposed by the form, using EF Core's change-tracking to persist the update.
+
+### Delete Product
+A single-action handler that fetches the entity, removes it from the `DbSet`, saves changes, and redirects to the index. Returns `404 Not Found` for unknown IDs.
+
+### Remote (AJAX) Title Validation
+The `Title` field on the create/edit form is decorated with `[Remote("IsTitleAvailable", "Product")]`. Before submission, jQuery Unobtrusive Validation fires an asynchronous `GET` request to `ProductController.IsTitleAvailable(string title, int id)`, which returns `true` if the title is unique (excluding the current product during an edit), or a human-readable error message string otherwise.
 
 ---
 
-## Data Models
+## 🗄 Data Models
 
 ### `Products`
-| Property | Type | Notes |
+
+| Property | Type | Constraints |
 |---|---|---|
-| `Id` | `int` | Primary key |
-| `Title` | `string` | Required, min 10 chars |
-| `Description` | `string` | Required, min 10 chars |
-| `Price` | `int` | Required, min value 5 |
+| `Id` | `int` | Primary key, auto-increment |
+| `Title` | `string` | Required, min length 10 |
+| `Description` | `string` | Required, min length 10 |
+| `Price` | `int` | Required, minimum value 5 |
 | `Count` | `int` | Stock quantity |
-| `Date_Of_Production` | `DateOnly` | Custom validation applied |
-| `Date_Of_Expire` | `DateOnly` | Custom validation applied |
-| `CategoriesId` | `int` | Foreign key |
-| `Category` | `Categories` | Navigation property |
+| `Date_Of_Production` | `DateOnly` | Custom: must not be a future date |
+| `Date_Of_Expire` | `DateOnly` | Custom: must be after production date |
+| `CategoriesId` | `int` | Foreign key → `Categories.Id` |
+| `Category` | `Categories` | Virtual navigation property |
 
 ### `Categories`
+
 | Property | Type | Notes |
 |---|---|---|
-| `Id` | `int` | Primary key |
+| `Id` | `int` | Primary key, auto-increment |
 | `Name` | `string` | Required |
-| `Product` | `List<Products>` | Navigation property |
+| `Product` | `List<Products>` | Navigation property (one-to-many) |
 
 ---
 
-## Validation
+## ✅ Validation System
 
-### Standard Annotations (on `ProductsCreateVM`)
-- `[Required]` on all user-facing fields
-- `[MinLength(10)]` on `Title` and `Description`
-- `[Range(5, int.MaxValue)]` on `Price`
-- `[Remote]` on `Title` for duplicate-title detection
+The application uses a two-layer validation strategy to ensure data integrity on both client and server sides.
 
-### Custom Attributes
+### Standard Data Annotations (on `ProductsCreateVM`)
 
-**`ProductionDateValidationAttribute`** — ensures the production date is not in the future and satisfies any business-logic constraints around when a product can be entered.
+| Annotation | Applied To | Rule |
+|---|---|---|
+| `[Required]` | All fields | Field must not be null or empty |
+| `[MinLength(10)]` | `Title`, `Description` | Minimum 10 characters |
+| `[Range(5, int.MaxValue)]` | `Price` | Must be at least 5 |
+| `[Remote]` | `Title` | AJAX duplicate-title check |
 
-**`ExpireDateValidationAttribute`** — ensures the expiry date is after the production date and is a valid future date.
+### Custom Validation Attributes
 
-Both attributes inherit from `ValidationAttribute` and provide descriptive error messages.
+**`ProductionDateValidationAttribute`**
+Inherits from `ValidationAttribute` and overrides `IsValid`. Compares the submitted `DateOnly` value against `DateOnly.FromDateTime(DateTime.Today)` — if the production date is set in the future, validation fails with a descriptive error message.
+
+```csharp
+// Usage on ViewModel
+[ProductionDateValidation]
+public DateOnly Date_Of_Production { get; set; }
+```
+
+**`ExpireDateValidationAttribute`**
+Also inherits from `ValidationAttribute`. Uses `ValidationContext.ObjectInstance` to access the parent `ProductsCreateVM` and cross-validates that the expiry date is not earlier than the production date.
+
+```csharp
+// Usage on ViewModel
+[ExpireDateValidation]
+public DateOnly Date_Of_Expire { get; set; }
+```
 
 ---
 
-## Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
 
-- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8)
-- SQL Server or SQL Server Express (instance name configurable in `Context.cs`)
-- Visual Studio 2022+ or VS Code with C# Dev Kit
+Ensure the following are installed before running the application:
 
-### Clone & Run
+- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8)
+- [SQL Server Express](https://www.microsoft.com/en-us/sql-server/sql-server-downloads) or SQL Server LocalDB
+- [Visual Studio 2022+](https://visualstudio.microsoft.com/) (recommended) **or** VS Code with the C# Dev Kit extension
+
+### Clone the Repository
 
 ```bash
 git clone https://github.com/Ahmed-Magdy-Elzayady/ASP.NET-Core-MVC-Application.git
 cd ASP.NET-Core-MVC-Application
 ```
 
----
+### Restore Dependencies
 
-## Database Setup
-
-The connection string is configured directly in `Data/Context/Context.cs` inside `OnConfiguring`:
-
-```csharp
-string ConnectionString =
-    "Data source=<YOUR_SERVER>\\SQLEXPRESS;" +
-    "Initial catalog=Day04MVcLab;" +
-    "Integrated security=true;" +
-    "TrustServerCertificate=True";
+```bash
+dotnet restore
 ```
 
-Update `<YOUR_SERVER>` to match your local SQL Server instance name, then apply the migration:
+---
+
+## 🗃 Database Setup
+
+The connection string is configured directly in `Data/Context/Context.cs` inside the `OnConfiguring` override:
+
+```csharp
+protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+{
+    string ConnectionString =
+        "Data source=<YOUR_SERVER>\\SQLEXPRESS;" +
+        "Initial catalog=Day04MVCLab;"           +
+        "Integrated security=true;"              +
+        "TrustServerCertificate=True";
+
+    optionsBuilder.UseSqlServer(ConnectionString);
+}
+```
+
+**Steps:**
+
+1. Replace `<YOUR_SERVER>` with your local SQL Server instance name (e.g., `DESKTOP-ABC123`).
+2. Apply the existing migration to create the database schema and seed data:
 
 ```bash
 dotnet ef database update
 ```
 
-This will create the `Day04MVcLab` database and apply the `Init` migration.
+This creates the `Day04MVCLab` database and applies the `Init` migration automatically.
 
-> **Note:** If you prefer using `appsettings.json` for connection strings, move the connection string there and register the `DbContext` in `Program.cs` using `AddDbContext<Context>(options => options.UseSqlServer(...))`.
-
----
-
-## Seed Data
-
-The `OnModelCreating` method in `Context.cs` seeds the following reference data automatically on first migration:
-
-**Categories:**
-- Dry Groceries
-- Dairy & Eggs
-- Meat & Frozen Food
-- Canned Goods
-
-**Sample Products** (seeded for development):
-- Premium Egyptian Rice — Dry Groceries
-- Penne Pasta — Dry Groceries
-- Sunflower Oil — Dry Groceries
-- Full Cream Milk — Dairy & Eggs
-- *(and more)*
+> **💡 Tip:** For a more production-aligned setup, move the connection string to `appsettings.json` and register the `DbContext` in `Program.cs`:
+>
+> ```csharp
+> builder.Services.AddDbContext<Context>(options =>
+>     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+> ```
 
 ---
 
-## Author
+## 🌱 Seed Data
+
+The `OnModelCreating` method in `Context.cs` automatically seeds reference categories and sample products on the first migration, so the application is immediately usable without manual data entry.
+
+### Categories
+
+| ID | Name |
+|---|---|
+| 1 | Dry Groceries |
+| 2 | Dairy & Eggs |
+| 3 | Meat & Frozen Food |
+| 4 | Canned Goods |
+
+### Sample Products
+
+| Title | Category | Price |
+|---|---|---|
+| Premium Egyptian Rice | Dry Groceries | 35 EGP |
+| Penne Pasta | Dry Groceries | 15 EGP |
+| Sunflower Oil | Dry Groceries | 80 EGP |
+| Full Cream Milk | Dairy & Eggs | 42 EGP |
+| Feta White Cheese | Dairy & Eggs | 38 EGP |
+| Natural Yogurt | Dairy & Eggs | 8 EGP |
+| *(and more…)* | — | — |
+
+---
+
+## 🔌 API Endpoints
+
+| Method | Route | Action | Description |
+|---|---|---|---|
+| `GET` | `/Product` | `Index` | Returns the product listing view |
+| `GET` | `/Product/MoreDetails/{id}` | `MoreDetails` | Returns the product detail view |
+| `GET` | `/Product/CreateNewProduct` | `CreateNewProduct` | Returns the create form |
+| `POST` | `/Product/CreateNewProduct` | `CreateNewProduct` | Validates and persists a new product |
+| `GET` | `/Product/UpdateProduct/{id}` | `UpdateProduct` | Returns the pre-populated edit form |
+| `POST` | `/Product/UpdateProduct` | `UpdateProduct` | Validates and applies product updates |
+| `GET` | `/Product/DeleteProduct/{id}` | `DeleteProduct` | Deletes the product and redirects |
+| `GET` | `/Product/IsTitleAvailable` | `IsTitleAvailable` | Remote validation — returns `true` or an error string |
+
+---
+
+## 🤝 Contributing
+
+Contributions, issues, and feature requests are welcome.
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/your-feature-name`
+3. Commit your changes: `git commit -m "feat: add your feature"`
+4. Push to your branch: `git push origin feature/your-feature-name`
+5. Open a Pull Request
+
+---
+
+## 👤 Author
 
 **Ahmed Magdy Elzayady**
-[GitHub](https://github.com/Ahmed-Magdy-Elzayady) · ahmed.m.elzayady@gmail.com
+
+- GitHub: [@Ahmed-Magdy-Elzayady](https://github.com/Ahmed-Magdy-Elzayady)
+- Email: [ahmed.m.elzayady@gmail.com](mailto:ahmed.m.elzayady@gmail.com)
 
 ---
 
-> This project was developed as part of a full-stack MVC learning track. Version 4.0.0.
+<div align="center">
+
+Developed as part of a full-stack ASP.NET Core MVC learning track · **v4.0.0**
+
+</div>
