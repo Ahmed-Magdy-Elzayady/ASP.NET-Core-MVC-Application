@@ -1,0 +1,40 @@
+﻿@model IEnumerable<ProductsIndexVM>
+<h1 style="color:green;text-align:center"> All Products </h1>
+<br />
+<hr />
+<br />
+
+<a href="~/Product/CreateNewProduct"> <button class="btn btn-success ">Create New Produc</button></a>
+
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Description</th>
+            <th scope="col">Price</th>
+            <th scope="col">Category</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+     
+         
+            @foreach(var item in Model)
+            {
+                <tr>
+                    <td>@item.Title</td>
+                    <td>@item.Description</td>
+                    <td>@item.Price</td>
+                    <td>@item.Category</td>
+                <td>
+                <a asp-action="MoreDetails" asp-controller="Product" asp-route-id="@item.Id"><button class="btn btn-info">More Details</button></a>
+                <a asp-action="DeleteProduct" asp-controller="Product" asp-route-id="@item.Id"><button class="btn btn-danger">Delete</button></a>
+                <a asp-action="UpdateProduct" asp-controller="Product" asp-route-id="@item.Id"><button class="btn btn-success">Update</button></a>
+                </td>
+                </tr>
+            }
+         
+      
+    </tbody>
+</table>
+

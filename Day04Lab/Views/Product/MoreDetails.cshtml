@@ -1,0 +1,15 @@
+﻿@model ProductsDetailsVM
+
+<div class="card" style="width: 18rem;">
+    <div class="card-body">
+        <h5 class="card-title">Product Title: @Model.Title</h5>
+        <h6 class="card-subtitle mb-2 text-muted">Product Description :@Model.Description</h6>
+        <h6 class="card-subtitle mb-2 text-muted">Product Price :@Model.Price</h6>
+        <h6 class="card-subtitle mb-2 text-muted">Product Count :@Model.Count</h6>
+        <h6 class="card-subtitle mb-2 text-muted">Product Category :@Model.Category</h6>
+        <h6 class="card-subtitle mb-2 text-muted">Date Of Production :@Model.Date_Of_Production</h6>
+        <h6 class="card-subtitle mb-2 text-muted">Date Of Expire :@Model.Date_Of_Expire</h6>
+
+        <a asp-action="Index" asp-controller="Product">Return Back</a>
+    </div>
+</div>
